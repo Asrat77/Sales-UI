@@ -1,30 +1,30 @@
 "use client";
+import { Sale } from "@/Models/sale.model";
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useState } from "react";
 // Make all feilds required except description (show alert if a value is missing), Update total price on submit using useEffect
 
 export default function Home() {
 
-  const [formData, setFormData] = useState(
+  const [formData, setFormData] = useState<Sale>(
     {
       item: "",
       description: "",
-      quantity: "",
-      unit_price: "",
-      total_price: ""
+      quantity: 0,
+      unit_price: 0,
+      total_price: 0
     }
   )
 
   useEffect(() => {
-    const quantity = parseFloat(formData.quantity);
-    const unitPrice = parseFloat(formData.unit_price);
+    const quantity = formData.quantity
+    const unitPrice = formData.unit_price
     const totalPrice = quantity * unitPrice;
-    // String(totalPrice)
     console.log(typeof totalPrice)
 
-    // @ts-ignore
     setFormData((prevState) => ({ ...prevState, total_price: totalPrice }));
   }, [formData.quantity, formData.unit_price]);
+
 
 
   const handleChange = (event: any) => {
@@ -34,8 +34,6 @@ export default function Home() {
       [name]: name === 'total_price' ? String(value) : value
     }));
   };
-
-
 
   const validateForm = () => {
     const errors:any = {};
@@ -127,3 +125,6 @@ const styles = {
     cursor: 'pointer'
   }
 };
+
+
+
