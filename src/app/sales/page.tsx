@@ -1,93 +1,67 @@
 "use client";
-import { Sale } from "@/Models/sale.model";
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useState } from "react";
+import { useForm, Resolver } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ZodType } from "zod";
+import { z } from "zod";
+
 // Make all feilds required except description (show alert if a value is missing), Update total price on submit using useEffect
+
+const schema = z.object({
+  item: z
+  .string().min(1).max(30),
+  description: z
+  .string().optional(),
+  quantity: z
+  .number().min(1),
+  unit_price: z
+  .number().min(1),
+  total_price: z
+  .number().min(1)
+});
+type FormData = z.infer<typeof schema>
 
 export default function Home() {
 
-  const [formData, setFormData] = useState<Sale>(
-    {
-      item: "",
-      description: "",
-      quantity: 0,
-      unit_price: 0,
-      total_price: 0
-    }
-  )
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
 
-  useEffect(() => {
-    const quantity = formData.quantity
-    const unitPrice = formData.unit_price
-    const totalPrice = quantity * unitPrice;
-    console.log(typeof totalPrice)
-
-    setFormData((prevState) => ({ ...prevState, total_price: totalPrice }));
-  }, [formData.quantity, formData.unit_price]);
-
-
-
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: name === 'total_price' ? String(value) : value
-    }));
+  const submitData = (data: FormData) => {
+    console.log(data);
   };
 
-  const validateForm = () => {
-    const errors:any = {};
-
-     if (!formData.item) {
-      errors.item = "Item is required";
-    }
-
-    if (!formData.quantity) {
-      errors.quantity = "Quantity is required";
-    }
-
-    if (!formData.unit_price) {
-      errors.unit_price = "Unit Price is required";
-    }
-
-    setFormData((prevState) => ({ ...prevState, errors }));
-
-    return Object.keys(errors).length === 0;
-  };
-
-
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    if (validateForm()){
-      console.log(formData);
-    }
-    else{
-
-    }
-
-  };
 
   return (
-    <form action="" onSubmit={handleSubmit} style={styles.form}>
-      <label style={styles.label}>Item:
-        <input type="text" name="item" value={formData.item}  onChange={handleChange}  style={styles.input} required/>
-      </label>
+    <form onSubmit={handleSubmit(submitData)} style={styles.form}>
+      <label style={styles.label}>Item: </label>
+      <input type="text" {...register("item")} style={styles.input}/>
+        {errors.item && <span> {errors.item.message}</span>}
 
       <label style={styles.label}>Description:
-        <input type="text" name="description" value={formData.description} onChange={handleChange} style={styles.input} />
+        <input type="text" {...register("description")} style={styles.input} />
       </label>
+      {errors.description && <span> {errors.description.message}</span>}
 
-      <label style={styles.label}>Quantity:
-        <input type="number" name="quantity"value={formData.quantity} onChange={handleChange} style={styles.input} required />
+      <label style={styles.label}>quantity:
+        <input type="number" {...register("quantity", { valueAsNumber: true })} style={styles.input}/>
       </label>
+      {errors.quantity && <span> {errors.quantity.message}</span>}
 
-    <label style={styles.label}>Unit price:
-      <input type="number" name="unit_price"value={formData.unit_price} onChange={handleChange}  style={styles.input} required />
-    </label>
+      <label style={styles.label}>Unit Price:
+        <input type="number" {...register("unit_price", { valueAsNumber: true })} style={styles.input}/>
+      </label>
+      {errors.unit_price && <span> {errors.unit_price.message}</span>}
 
-    <label style={styles.label}>TotalPrice:
-      <input type="number" name="total_price"value={formData.total_price} onChange={handleChange} style={styles.input} required readOnly/>
-    </label>
+      <label style={styles.label}>Total Price:
+        <input type="number" {...register("total_price", { valueAsNumber: true })} style={styles.input}/>
+      </label>
+      {errors.total_price && <span> {errors.total_price.message}</span>}
 
     <input type="submit" value="Submit" style={styles.submitButton}/>
 
