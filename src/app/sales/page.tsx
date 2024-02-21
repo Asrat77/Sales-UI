@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodType } from "zod";
 import { z } from "zod";
 
-// Make all feilds required except description (show alert if a value is missing), Update total price on submit using useEffect
+// Make all fields required except description (show alert if a value is missing), Update total price on submit using useEffect
 
 const schema = z.object({
   item: z
@@ -38,67 +38,33 @@ export default function Home() {
 
 
   return (
-    <form onSubmit={handleSubmit(submitData)} style={styles.form}>
-      <label style={styles.label}>Item: </label>
-      <input type="text" {...register("item")} style={styles.input}/>
-        {errors.item && <span> {errors.item.message}</span>}
+    <form onSubmit={handleSubmit(submitData)} className="max-w-xl mx-auto p-4 bg-green-900 rounded-lg">
+      <label className="block mb-4 text-white">Item: </label>
+      <input type="text" {...register("item")} className="w-full p-2 mb-4 border-2 border-gray-300 rounded-lg text-black" />
+        {errors.item && <span className="text-red-500"> {errors.item.message}</span>}
 
-      <label style={styles.label}>Description:
-        <input type="text" {...register("description")} style={styles.input} />
+      <label className="block mb-4 text-white">Description:
+        <input type="text" {...register("description")} className="w-full p-2 mb-4 border-2 border-gray-300 rounded-lg text-black" />
       </label>
-      {errors.description && <span> {errors.description.message}</span>}
+      {errors.description && <span className="text-red-500"> {errors.description.message}</span>}
 
-      <label style={styles.label}>quantity:
-        <input type="number" {...register("quantity", { valueAsNumber: true })} style={styles.input}/>
+      <label className="block mb-4 text-white">Quantity:
+        <input type="number" {...register("quantity", { valueAsNumber: true })} className="w-full p-2 mb-4 border-2 border-gray-300 rounded-lg text-black" />
       </label>
-      {errors.quantity && <span> {errors.quantity.message}</span>}
+      {errors.quantity && <span className="text-red-500"> {errors.quantity.message}</span>}
 
-      <label style={styles.label}>Unit Price:
-        <input type="number" {...register("unit_price", { valueAsNumber: true })} style={styles.input}/>
+      <label className="block mb-4 text-white">Unit Price:
+        <input type="number" {...register("unit_price", { valueAsNumber: true })} className="w-full p-2 mb-4 border-2 border-gray-300 rounded-lg text-black" />
       </label>
-      {errors.unit_price && <span> {errors.unit_price.message}</span>}
+      {errors.unit_price && <span className="text-red-500"> {errors.unit_price.message}</span>}
 
-      <label style={styles.label}>Total Price:
-        <input type="number" {...register("total_price", { valueAsNumber: true })} style={styles.input}/>
+      <label className="block mb-4 text-white">Total Price:
+        <input type="number" {...register("total_price", { valueAsNumber: true })} className="w-full p-2 mb-4 border-2 border-gray-300 rounded-lg text-black" />
       </label>
-      {errors.total_price && <span> {errors.total_price.message}</span>}
+      {errors.total_price && <span className="text-red-500"> {errors.total_price.message}</span>}
 
-    <input type="submit" value="Submit" style={styles.submitButton}/>
+      <input type="submit" value="Submit" className="bg-green-500 text-white py-2 px-4 rounded cursor-pointer" />
 
     </form>
       );
 }
-
-const styles = {
-  form: {
-    maxWidth: '400px',
-    margin: '0 auto',
-    padding: '20px',
-    backgroundColor: 'f0000',
-    borderRadius: '8px'
-  },
-  label: {
-    display: 'block',
-    marginBottom: '10px',
-    color: '#FFFFFF'
-  },
-  input: {
-    width: '100%',
-    padding: '10px',
-    marginBottom: '15px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    color: '#000000',
-  },
-  submitButton: {
-    backgroundColor: '#4caf50',
-    color: 'white',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer'
-  }
-};
-
-
-
