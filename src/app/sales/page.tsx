@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useForm, Resolver } from "react-hook-form"
+import { useForm, Resolver, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodType } from "zod";
 import { z } from "zod";
@@ -27,14 +27,23 @@ export default function Home() {
   const {
     register,
     handleSubmit,
+    watch,
+    reset,
+    setValue,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormData>(
+  {
     resolver: zodResolver(schema),
   });
 
+  const watchFields = watch(["quantity", "unit_price"])
   const submitData = (data: FormData) => {
     console.log(data);
   };
+
+  useEffect (()=>{
+      setValue("total_price", watchFields[0] * watchFields[1])
+  }), [watchFields[0], watchFields[1]]
 
 
   return (
@@ -59,7 +68,7 @@ export default function Home() {
       {errors.unit_price && <span className="text-red-500"> {errors.unit_price.message}</span>}
 
       <label className="block mb-4 text-white">Total Price:
-        <input type="number" {...register("total_price", { valueAsNumber: true })} className="w-full p-2 mb-4 border-2 border-gray-300 rounded-lg text-black" />
+        <input type="number" {...register("total_price", { valueAsNumber: true })}  className="w-full p-2 mb-4 border-2 border-gray-300 rounded-lg text-black" />
       </label>
       {errors.total_price && <span className="text-red-500"> {errors.total_price.message}</span>}
 
